@@ -1,0 +1,32 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_ACCOUNT_ID: 001915086928
+    AWS_REGION: eu-west-1
+    BACKEND_REPO: blog-backend
+    FRONTEND_REPO: blog-frontend
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region $AWS_REGION \
+        | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+  build:
+    commands:
+      - echo Building backend image...
+      - docker build -t $BACKEND_REPO ./backend
+      - echo Building frontend image...
+      - docker build -t $FRONTEND_REPO ./frontend
+      - echo Tagging images...
+      - docker tag $BACKEND_REPO:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_REPO:latest
+      - docker tag $FRONTEND_REPO:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
+
+  post_build:
+    commands:
+      - echo Pushing images to ECR...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_REPO:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
