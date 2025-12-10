@@ -3,11 +3,11 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: blogdb
-      POSTGRES_USER: bloguser
-      POSTGRES_PASSWORD: strongpasswordhere
+      POSTGRES_DB: blog_db
+      POSTGRES_USER: blog_user
+      POSTGRES_PASSWORD: challenge!123!
     ports:
-      - "5432:5432"
+      - "55432:5432"
 
   backend:
     build: ../backend

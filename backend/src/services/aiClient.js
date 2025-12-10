@@ -17,7 +17,7 @@ async function generateArticle(topic = 'software engineering') {
       {
         role: 'user',
         content:
-          'Generate a short blog post. Return a title on the first line, then a blank line, then the article body.'
+          'Generate a short blog post. Return a title on the first line, then a blank line, then the article body. Dont include bold text or markdown formatting.'
       }
     ],
     stream: false
